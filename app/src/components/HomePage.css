@@ -1,0 +1,33 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    width: 100%;
+    text-align: center;
+    background-color: rgb(225, 225, 226);
+    padding: 10rem;
+}
+
+h1 {
+ 
+    font-size: 6rem;
+}
+h2 {
+    margin-top: 1rem;
+    font-size: 4rem;
+    
+}
+h3 {
+    margin-top: 1rem;
+    font-size: 5rem;
+    color: rgb(77, 157, 232);
+}
+.description {
+    width: 40%;
+   
+    line-height: 1.5rem;
+    margin-top: 2rem;
+    
+}
