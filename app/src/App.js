@@ -12,6 +12,7 @@ import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import Header from './components/header';
 import Footer from './components/footer';
 import HomePage from './components/HomePage';
+import ProposalsTab from './components/proposals';
 
 const chains = [chain.goerli];
 
@@ -36,8 +37,12 @@ const ethereumClient = new EthereumClient(wagmiClient, chains);
           <Router>
             <Header />
                 <main>
-                  <Route path="/">
+                  <Route exact path="/">
                     <HomePage />
+                  </Route>
+
+                  <Route path="/proposals">
+                    <ProposalsTab />
                   </Route>
                 </main>
             <Footer />

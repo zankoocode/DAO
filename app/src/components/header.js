@@ -7,8 +7,8 @@ function Header () {
     return (
         <header>
             <div className="links">
-               <NavLink to={"/"} className="home-navlink"> Home </NavLink>
-               <NavLink to={"/Proposals"} className="proposals-navlink"> Proposals </NavLink>
+               <NavLink exact to={"/"} className="home-navlink"> Home </NavLink>
+               <NavLink to={"/proposals"} className="proposals-navlink"> Proposals </NavLink>
             </div>
             <div className="connect-btn-div">
                 <Web3Button />

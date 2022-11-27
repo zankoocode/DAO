@@ -20,6 +20,8 @@ function HomePage () {
          where users can vote on buying NFTs on a Fake NFT Market Place
       </p>
       </div>
+
+      
     )
 }
 
