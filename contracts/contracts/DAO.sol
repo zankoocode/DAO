@@ -76,7 +76,7 @@ contract DAO is Ownable {
         
         uint256 numOfVotes = 0;
         if (proposal.voters[msg.sender] == false) {
-            numProposals++;
+            numOfVotes++;
             proposal.voters[msg.sender] = true;
         }
         require (numOfVotes > 0, "you have already voted");

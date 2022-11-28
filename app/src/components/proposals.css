@@ -29,6 +29,7 @@ ul {
 .proposal-div {
     margin-top: 4rem;
     width: 40%;
+    min-height: 15rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -52,6 +53,10 @@ button {
     color: white;
     padding: 1rem;
     border-radius: 0.3rem;
+}
+button:disabled{
+    background-color: rgba(81, 148, 247, 0.5);
+    cursor: not-allowed;
 }
 input {
     padding: 1rem;
@@ -106,4 +111,8 @@ button:hover{
 .create-page.open {
     opacity: 1;
     z-index: 999;
+}
+.disclaimer {
+    margin-bottom: 1rem;
+    line-height: 1.4rem;
 }

@@ -1,6 +1,7 @@
 export const DAO_CONTRACT_ADDRESS = "0x34Bc5D7C0197647F979BD0d64059acabCca55afc";
 export const ZCD_CONTRACT_ADDRESS = "0x7f0Ed920Ed6b5bd1fBFd5Ab6b46DE777997468A5";
 
+
 export const DAO_ABI = [
     {
       "inputs": [
@@ -467,3 +468,4 @@ export const ZCD_ABI = [
       "type": "function"
     }
   ];
+  
