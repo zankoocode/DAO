@@ -127,26 +127,12 @@ function ProposalsTab () {
         enabled: true
     })
 
-    /*const getAllProposals = async () => {
-        try {
-            const proposals = [];
-            while(idOfProposal < numOfProposals) {
-               const proposal = await getProposalById();
-                proposals.push(proposal);
-                idOfProposal++;
-            }
-            await setProposals(proposals);
-            return proposals
-        } catch (err) {
-            console.log(err)
-        }
-    }
-*/
-    const { write: voteOnProposal } = useContractWrite({
+   
+    const { write: voteOnProposalToAgainst } = useContractWrite({
         address: DAO_CONTRACT_ADDRESS,
         abi: DAO_ABI,
         functionName: 'voteOnProposal',
-        args: [proposalIndex, vote],
+        args: [idOfProposal, 1],
         
         onError(data) {
             console.log(data)
@@ -155,7 +141,19 @@ function ProposalsTab () {
             gasLimit: 100000
         }
     })
-
+    const { write: voteOnProposalToFor } = useContractWrite({
+        address: DAO_CONTRACT_ADDRESS,
+        abi: DAO_ABI,
+        functionName: 'voteOnProposal',
+        args: [idOfProposal, 0],
+        
+        onError(data) {
+            console.log(data)
+        },
+        overrides: {
+            gasLimit: 100000
+        }
+    })
     const { write: executeProposal } = useContractWrite({
         address: DAO_CONTRACT_ADDRESS,
         abi: DAO_ABI,
@@ -245,11 +243,11 @@ function ProposalsTab () {
                         if you want to cast your vote, either click on For or Against button
                     </p>
 
-                    <button className="for-btn" onClick={voteOnProposal }> 
+                    <button className="for-btn" onClick={voteOnProposalToFor}> 
                         For
                     </button>
 
-                    <button className="against-btn">
+                    <button className="against-btn" onClick={voteOnProposalToAgainst}>
                         Against
                     </button>
 
