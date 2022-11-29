@@ -31,3 +31,24 @@ h3 {
     margin-top: 2rem;
     
 }
+
+
+@media only screen and (max-width: 600px){
+    .home {
+        padding: 8rem;
+    }
+   h1 {
+    font-size: 4rem;
+    
+   }
+   h2 {
+    font-size: 2rem;
+   }
+   h3 {
+    font-size: 4rem;
+   }
+   .description {
+    width: 80%;
+    
+   }
+}

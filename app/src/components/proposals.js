@@ -158,10 +158,12 @@ function ProposalsTab () {
         address: DAO_CONTRACT_ADDRESS,
         abi: DAO_ABI,
         functionName: 'execute',
-        args: [proposalToExecuteId],
-
+        args: [idOfProposal],
+        overrides: {
+            gasLimit: 100000
+        }
     })
-
+    const now = new Date();
    
     return (
         <div className="propaslsTab">
@@ -187,7 +189,7 @@ function ProposalsTab () {
                         NFT Id: {NFTTokenIdParsed}
                     </li>
                     <li>
-                        Deadline: <br/> { deadlineParsed.toLocaleString() }
+                        Deadline: <br/>  {   now.toLocaleString() > deadlineParsed.toLocaleString() ? "deadline reached" : deadlineParsed.toLocaleString() }
                     </li>
                    <li>
                     For: {forVotesParsed}
@@ -203,12 +205,12 @@ function ProposalsTab () {
                         <p> Number of Proposals: {parseInt(numOfProposals)}</p>
                     </div> }
                 
-                { executedParsed ? <p> "Proposal have been executed" </p>:
+                { executedParsed ? <p className="disclaimer-executed"> Proposal have been executed </p>:
                 <div className="buttons">
-                <button className="vote-btn" onClick={()=> setPopupVote(true)} disabled={!idOfProposal || utils.formatEther(ZCDBalance) <= 0}>
+                <button className="vote-btn" onClick={()=> setPopupVote(true)} disabled={deadlineParsed.toLocaleString() < now.toLocaleString() || !idOfProposal || utils.formatEther(ZCDBalance) <= 0}>
                     Vote
                 </button>
-                <button className="execute-btn" disabled={!idOfProposal || utils.formatEther(ZCDBalance) <= 0}>
+                <button className="execute-btn" onClick={executeProposal} disabled={now.toLocaleString() < deadlineParsed.toLocaleString() || executedParsed || !idOfProposal || utils.formatEther(ZCDBalance) <= 0}>
                     Execute
                 </button>
                 </div>}

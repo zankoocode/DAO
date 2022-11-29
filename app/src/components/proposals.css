@@ -116,3 +116,24 @@ button:hover{
     margin-bottom: 1rem;
     line-height: 1.4rem;
 }
+
+.disclaimer-executed {
+    width: 50%;
+    margin-left: 2rem;
+    color: red;
+    text-align: center;
+    line-height: 2rem;
+}
+
+
+@media only screen and (max-width: 600px) {
+    #proposal-search {
+        width: 30%;
+    }
+    .proposal-div {
+        width: 80%;
+    }
+    .create-btn {
+        width: 20%;
+    }
+}
