@@ -70,3 +70,37 @@
     width: 20%;
     background-color: rgb(192, 15, 15);
 }
+
+@media only screen and (max-width: 500px) {
+    .create-input {
+        position: absolute;
+        top: 5rem;
+        left: 2rem;
+        width: 50%;
+        
+    }
+    .close-btn {
+        
+        top: 10rem;
+        right: 10rem;
+    } 
+    .propose-btn {
+        
+        left: 18rem;
+        
+        
+    } 
+    .for-btn {
+        position: absolute;
+        left: 7rem;
+        top: 6rem;
+        width: 20%;
+        
+    }
+    .against-btn {
+        position: absolute;
+        left: 14rem;
+        top: 6rem;
+        
+    }
+}
