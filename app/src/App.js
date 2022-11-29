@@ -14,6 +14,7 @@ import Footer from './components/footer';
 import HomePage from './components/HomePage';
 import ProposalsTab from './components/proposals';
 
+// chains to be connected: only goerli ethereum
 const chains = [chain.goerli];
 
 // Wagmi client

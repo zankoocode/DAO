@@ -1,32 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import './proposals.css';
-import { useAccount, useBalance, useContract, useContractRead, useContractWrite} from 'wagmi'
+import { useAccount, useBalance, useContractRead, useContractWrite} from 'wagmi'
 import { ZCD_ABI, 
          DAO_ABI,
          DAO_CONTRACT_ADDRESS,
          ZCD_CONTRACT_ADDRESS,
-         NFT_MARKETPLACE_CONTRACT_ADDRESS,
-         NFT_CONTRACT_ABI} from '../constants/index.js';
+         } from '../constants/index.js';
 import Popup from "./Popup";
 import { utils } from "ethers";
-import { id } from "ethers/lib/utils.js";
+
 
 function ProposalsTab () {
 
+    // Ether balance of the DAO contract
     const [DAOEtherBalance, setDAOEtherBalance] = useState(0);
-
+    // number of proposals
     const [numOfProposals, setNumOfProposals] = useState(0);
-
-    const [proposals, setProposals] = useState([]);
-
+    // zcd balance of user
     const [ZCDBalance, setZCDBalance] = useState(0);
-
+    // id of proposal to search
     const [idOfProposal, setIdOfProposal] = useState("");
 
-    const [proposalIndex, setProposalIndex] = useState(0);
-
-    const [proposalToExecuteId, setProposalToExecuteToId] = useState("");
-
+   
+    // general state tracking
     const [NFTTokenIdParsed, setNFTTokenIdParsed] = useState("");
 
     const [deadlineParsed, setDeadlineParsed] = useState("");
@@ -34,18 +30,21 @@ function ProposalsTab () {
     const [forVotesParsed, setForVotesParsed] = useState("");
 
     const [againstVotesParsed, setAgainstVotesParsed] = useState("");
-
+    
     const [executedParsed, setExecutedParsed] = useState(null);
-
+    // NFT token id retuned among proposals
     const [NFTTokenId, setNFTTokenId] = useState("");
-
+    // popupVote will trigger the props of Popup for creating proposal
     const [popupCreate, setPopupCreate] = useState(false);
-
+    // popupVote will trigger the props of Popup for voting
     const [popupVote, setPopupVote] = useState(false);
-
-    const [vote, setVote] = useState(1);
-
+    // NFT token id for propose 
+    const [NFTTokenIdForPropose, setNFTTokenIdForPropose] = useState("");
+    // account of the user
     const account = useAccount();
+    // variable to check the time of deadline
+    const now = new Date();
+   
 
     const { refetch: getDAOEtherBalance } = useBalance({
         address: DAO_CONTRACT_ADDRESS,
@@ -55,6 +54,7 @@ function ProposalsTab () {
         },
         onError(data) {
             console.log(data)
+            setDAOEtherBalance(data.value)
         }
     })
 
@@ -90,7 +90,7 @@ function ProposalsTab () {
         address: DAO_CONTRACT_ADDRESS,
         abi: DAO_ABI,
         functionName: 'createProposal',
-        args: [NFTTokenId],
+        args: [NFTTokenIdForPropose],
         onSettled(data) {
              getNumOfProposals();
         },
@@ -113,8 +113,6 @@ function ProposalsTab () {
                 noVotes: data.noVotes,
                 executed: data.executed
             }
-            
-             console.log(parse)
              setNFTTokenIdParsed(parseInt(parse.NFTTokenId))
              setDeadlineParsed(parse.deadline)
             setForVotesParsed(parseInt(parse.yesVotes))
@@ -163,21 +161,22 @@ function ProposalsTab () {
             gasLimit: 100000
         }
     })
-    const now = new Date();
-   
+    
     return (
         <div className="propaslsTab">
 
+            {/* the search div below will search among the proposals */}
             <div className="search-for-proposal">
-               
                 <input placeholder="proposal id" id="proposal-search" onChange={(e) => setIdOfProposal(e.target.value)}/>
                 <button className="search-btn" onClick={getProposalById}>
                     Search
                 </button>
             </div>
 
-            <div className="proposal-div">
 
+            <div className="proposal-div">
+                {/* the condition down below will check if id of the Proposal is provided or not, if it is provided it will return 
+                    the information about proposal and if not it will return a message that tells the user to search among the target proposals */}
                     {idOfProposal ? 
                     <div className="proposal-info">
                         <p className="proposal-id">
@@ -189,7 +188,7 @@ function ProposalsTab () {
                         NFT Id: {NFTTokenIdParsed}
                     </li>
                     <li>
-                        Deadline: <br/>  {   now.toLocaleString() > deadlineParsed.toLocaleString() ? "deadline reached" : deadlineParsed.toLocaleString() }
+                        Deadline: <br/>  {  now.toLocaleString() > deadlineParsed.toLocaleString() ? "deadline reached" : deadlineParsed.toLocaleString() }
                     </li>
                    <li>
                     For: {forVotesParsed}
@@ -198,21 +197,35 @@ function ProposalsTab () {
                     Against: {againstVotesParsed}
                    </li>
                 </ul>
-                </div> : <div className="proposal-info">
-                        <p className="disclaimer">
-                            Please first search among the proposals that you want vote or execute
-                        </p>
+            </div> : <div className="proposal-info">
+                    <p className="disclaimer">
+                        Please first search among the proposals that you want vote or execute
+                    </p>
                         <p> Number of Proposals: {parseInt(numOfProposals)}</p>
-                    </div> }
+            </div> }
                 
-                { executedParsed ? <p className="disclaimer-executed"> Proposal have been executed </p>:
+                {/* the condition below will check to see if the proposal have been executed before or not, if so it will just return
+                the message Proposal have been executed, and if not it will return buttons to vote and execute*/}
+                { executedParsed ?
+                 <p className="disclaimer-executed"> Proposal have been executed </p>
+                    :
                 <div className="buttons">
-                <button className="vote-btn" onClick={()=> setPopupVote(true)} disabled={deadlineParsed.toLocaleString() < now.toLocaleString() || !idOfProposal || utils.formatEther(ZCDBalance) <= 0}>
+
+                {/* the vote button will open a popup window which user can vote, and if the conditions didnt meet it will be disabled*/}
+                <button className="vote-btn" onClick={()=> setPopupVote(true)} disabled={deadlineParsed.toLocaleString() < now.toLocaleString() 
+                                                                                            || !idOfProposal || utils.formatEther(ZCDBalance) <= 0}>
                     Vote
                 </button>
-                <button className="execute-btn" onClick={executeProposal} disabled={now.toLocaleString() < deadlineParsed.toLocaleString() || executedParsed || !idOfProposal || utils.formatEther(ZCDBalance) <= 0}>
+               
+                {/* the execute button will execute the proposal and it will be disabled if the conditions didnt meet*/}
+                <button className="execute-btn" onClick={executeProposal} disabled={now.toLocaleString() < deadlineParsed.toLocaleString() 
+                                                                                    || executedParsed 
+                                                                                    || !idOfProposal 
+                                                                                    || utils.formatEther(ZCDBalance) <= 0
+                                                                                    || DAOEtherBalance < 0}>
                     Execute
                 </button>
+
                 </div>}
                 
             </div>
@@ -223,11 +236,11 @@ function ProposalsTab () {
         </button>
         </div>
             
-                        
+            {/* if the trigger is true the window will Popup*/}      
             <Popup trigger={popupCreate} >
 
                 <label htmlFor="create-input" className="label-input-create">{utils.formatEther(ZCDBalance) <= 0 ? "You dont own any governance token" : "NFT Token Id you want to propose:"}  </label>
-               <input className="create-input" onChange={(e)=> setNFTTokenId(e.target.value)} 
+                <input className="create-input" onChange={(e)=> setNFTTokenIdForPropose(e.target.value)} 
                     id="create-input" placeholder="Token Id" type="number" disabled={utils.formatEther(ZCDBalance) <= 0}/>
 
                 
@@ -239,24 +252,24 @@ function ProposalsTab () {
                 </button>
             </Popup>
 
+             {/* if the trigger is true the window will Popup*/}     
+            <Popup trigger={popupVote}>
+                <p>
+                    if you want to cast your vote, either click on For or Against button
+                </p>
 
-                <Popup trigger={popupVote}>
-                    <p>
-                        if you want to cast your vote, either click on For or Against button
-                    </p>
+                <button className="for-btn" onClick={voteOnProposalToFor}> 
+                    For
+                </button>
 
-                    <button className="for-btn" onClick={voteOnProposalToFor}> 
-                        For
-                    </button>
+                <button className="against-btn" onClick={voteOnProposalToAgainst}>
+                    Against
+                </button>
 
-                    <button className="against-btn" onClick={voteOnProposalToAgainst}>
-                        Against
-                    </button>
-
-                    <button className="close-btn" onClick={()=> setPopupVote(false)}>
-                        Close
-                    </button>
-                </Popup>
+                <button className="close-btn" onClick={()=> setPopupVote(false)}>
+                    Close
+                </button>
+            </Popup>
         </div>
 
 
