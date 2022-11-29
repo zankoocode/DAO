@@ -30,7 +30,7 @@ contract DAO is Ownable {
         uint256 noVotes;
     // executed - whether or not this proposal has been executed yet. Cannot be executed before the deadline has been exceeded.
         bool executed;
-    // voters - a mapping of CryptoDevsNFT tokenIDs to booleans indicating whether that NFT has already been used to cast a vote or not
+    // voters 
         mapping(address => bool) voters;
     }
 
